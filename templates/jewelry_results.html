@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1050px; margin: 0 auto;">
+  <!-- Header & Actions -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+    <div>
+      <div class="hero-badge">💍 Jewelry Plan Generated</div>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.35rem;">{{ plan.title }}</h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 680px;">
+        {{ plan.summary }}
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <button 
+        onclick="toggleSavePlan({{ plan.id }}, this)" 
+        class="btn {% if plan.is_saved %}btn-primary{% else %}btn-outline{% endif %}">
+        {% if plan.is_saved %}★ Saved in Collection{% else %}☆ Save Recommendation{% endif %}
+      </button>
+      <a href="/jewelry-planner" class="btn btn-secondary">Create Another Plan</a>
+      <a href="/history" class="btn btn-secondary">History</a>
+    </div>
+  </div>
+
+  <!-- Outfit Analysis & Visual Card (Section 9) -->
+  {% if plan.image_url or plan.input_parameters.get('outfit_description') %}
+    <div class="card" style="margin-bottom: 2rem; padding: 1.75rem; background: #faf5ff; border-color: #e9d5ff;">
+      <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+        {% if plan.image_url %}
+          <div style="flex-shrink: 0;">
+            <img src="{{ plan.image_url }}" alt="Uploaded Outfit" style="width: 120px; height: 120px; object-fit: cover; border-radius: var(--radius-md); border: 2px solid #d8b4fe; box-shadow: var(--shadow-sm);">
+          </div>
+        {% endif %}
+        <div style="flex: 1;">
+          <div style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; color: #7e22ce; font-weight: 700; margin-bottom: 0.25rem;">
+            Multimodal Visual & Styling Analysis
+          </div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.4rem; color: #581c87;">
+            Stylist Assessment & Neckline Harmonization
+          </h3>
+          <p style="color: #4a044e; font-size: 0.92rem; line-height: 1.5;">
+            {{ plan.input_parameters.get('outfit_analysis') or "Analyzed color balance and neckline compatibility to select cohesive metal tones, gemstone accents, and comfortable silhouettes." }}
+          </p>
+          {% if plan.input_parameters.get('outfit_description') %}
+            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #6b21a8;">
+              <strong>Outfit notes:</strong> {{ plan.input_parameters.get('outfit_description') }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Budget Overview Banner -->
+  <div class="budget-overview-card" style="background: linear-gradient(135deg, #3b0764 0%, #581c87 100%);">
+    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #e9d5ff; font-weight: 700;">
+      Jewelry Budget Target & Allocation
+    </div>
+    
+    <div class="budget-stats-grid">
+      <div class="budget-stat">
+        <div class="label">Total Jewelry Budget</div>
+        <div class="value">{{ plan.currency }}{{ "{:,.0f}".format(plan.budget) }}</div>
+      </div>
+      <div class="budget-stat">
+        <div class="label">Total Estimated Cost</div>
+        <div class="value" style="color: #6ee7b7;">{{ plan.currency }}{{ "{:,.0f}".format(plan.total_estimated_cost) }}</div>
+      </div>
+      <div class="budget-stat">
+        <div class="label">Remaining Cushion</div>
+        <div class="value" style="color: {% if plan.remaining_budget < 0 %}#f87171{% else %}#93c5fd{% endif %};">
+          {{ plan.currency }}{{ "{:,.0f}".format(plan.remaining_budget) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilization Progress Bar -->
+    <div class="progress-container">
+      {% set pct = (plan.total_estimated_cost / plan.budget * 100)|round(1) if plan.budget > 0 else 0 %}
+      <div class="progress-header">
+        <span>Budget Utilization: <strong>{{ pct }}%</strong></span>
+        <span>Status: {% if plan.remaining_budget >= 0 %}✓ Within Target{% else %}⚠️ Exceeds Budget{% endif %}</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar-fill" style="width: {{ [pct, 100]|min }}%; {% if plan.remaining_budget < 0 %}background: #ef4444;{% endif %}"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Allocation Breakdown -->
+  <div class="card" style="margin-bottom: 2.5rem; padding: 1.75rem;">
+    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Jewelry Component Allocation</h3>
+    <div style="display: flex; flex-direction: column;">
+      {% for cat in plan.budget_allocation %}
+        <div class="allocation-item">
+          <div style="font-weight: 600; width: 45%;">{{ cat.category }}</div>
+          <div style="display: flex; align-items: center; width: 30%;">
+            <div class="allocation-bar-bg">
+              <div class="allocation-bar-fg" style="width: {{ cat.percentage }}%; background: #9333ea;"></div>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">{{ cat.percentage }}%</span>
+          </div>
+          <div style="font-weight: 700; width: 25%; text-align: right;">
+            {{ plan.currency }}{{ "{:,.0f}".format(cat.allocated) }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Jewelry Recommendations Grid -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+      <h2 style="font-size: 1.6rem;">Recommended Jewelry Pieces</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">
+        {{ plan.recommendations|length }} curated items
+      </span>
+    </div>
+
+    <div class="rec-grid">
+      {% for item in plan.recommendations %}
+        <div class="rec-card">
+          <div>
+            <div class="rec-header">
+              <span class="rec-category">{{ item.category }}</span>
+              <span class="platform-badge platform-caratlane">{{ item.platform }}</span>
+            </div>
+            <h4 class="rec-title">{{ item.name }}</h4>
+            <div style="font-size: 0.82rem; color: #64748b; margin-bottom: 0.5rem;">
+              {% if item.metal %}<span>Metal: <strong>{{ item.metal }}</strong></span>{% endif %}
+              {% if item.style %} · <span>Style: <strong>{{ item.style }}</strong></span>{% endif %}
+            </div>
+            <p class="rec-desc">{{ item.description }}</p>
+            <div class="rec-reason">
+              <strong>Stylist Note:</strong> {{ item.reason }}
+            </div>
+          </div>
+
+          <div class="rec-footer">
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Estimated Price</div>
+              <div class="rec-price">{{ plan.currency }}{{ "{:,.0f}".format(item.estimated_price) }}</div>
+            </div>
+            <a href="{{ item.url }}" target="_blank" class="btn btn-secondary btn-sm">
+              View on {{ item.platform }} ↗
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="alert alert-info" style="font-size: 0.85rem; margin-top: 2rem;">
+    ℹ️ <strong>Jewelry Certification Notice:</strong> Recommendations represent style archetypes and simulated pricing. Prior to purchasing real gold or diamond jewelry, always verify BIS hallmark, IGI/GIA certificate, and return policies.
+  </div>
+</div>
+{% endblock %}
