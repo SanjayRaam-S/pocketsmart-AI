@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 0 auto;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem; text-align: center;">
+    <div class="hero-badge">🛋️ Home Interior Budget Planner</div>
+    <h1 style="font-size: 2.35rem; margin-bottom: 0.5rem;">Design Your Space Within Budget</h1>
+    <p style="color: var(--text-muted); font-size: 1rem; max-width: 650px; margin: 0 auto;">
+      Specify your rooms, required furniture quantities, and decor preferences. Our AI budget engine will allocate funds and curate matched recommendations.
+    </p>
+  </div>
+
+  <div class="form-card">
+    <form id="homePlannerForm">
+      <!-- Section 1: Budget & Space -->
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        1. Budget & Property Details
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="total_budget">Total Budget <span class="required">*</span></label>
+          <div style="display: flex; gap: 0.5rem;">
+            <select id="currency" class="form-control" style="max-width: 80px;">
+              <option value="₹">₹</option>
+              <option value="$">$</option>
+              <option value="€">€</option>
+              <option value="£">£</option>
+            </select>
+            <input type="number" id="total_budget" class="form-control" placeholder="e.g. 75000" min="1000" step="500" value="50000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="home_type">Property / Space Type</label>
+          <select id="home_type" class="form-control">
+            <option value="1BHK Apartment">1BHK Apartment</option>
+            <option value="2BHK Apartment" selected>2BHK Apartment</option>
+            <option value="3BHK Apartment">3BHK Apartment</option>
+            <option value="Independent Villa">Independent Villa</option>
+            <option value="Studio Apartment">Studio Apartment</option>
+            <option value="Single Room / PG">Single Room / PG</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="number_of_rooms">Number of Rooms</label>
+          <input type="number" id="number_of_rooms" class="form-control" value="2" min="1" max="15">
+        </div>
+      </div>
+
+      <!-- Section 2: Room Selection -->
+      <div class="form-group" style="margin-top: 1rem;">
+        <label class="form-label">Select Rooms to Furnish & Decorate <span class="required">*</span></label>
+        <div class="chips-container" id="roomsContainer">
+          <div class="chip room-chip active" data-room="Living Room">🛋️ Living Room</div>
+          <div class="chip room-chip active" data-room="Bedroom">🛏️ Bedroom</div>
+          <div class="chip room-chip" data-room="Kitchen">🍳 Kitchen</div>
+          <div class="chip room-chip" data-room="Dining Room">🍽️ Dining Room</div>
+          <div class="chip room-chip" data-room="Bathroom">🚿 Bathroom</div>
+          <div class="chip room-chip" data-room="Balcony">🌿 Balcony</div>
+          <div class="chip room-chip" data-room="Office">💼 Home Office</div>
+        </div>
+      </div>
+
+      <!-- Section 3: Product Quantities -->
+      <h3 style="font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        2. Product Requirements & Quantities
+      </h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        Specify how many of each item you require so our AI can weight the budget appropriately.
+      </p>
+
+      <div class="quantity-grid">
+        <div class="quantity-item">
+          <label>Lights / Fixtures</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_lights">-</button>
+            <input type="number" id="qty_lights" class="counter-input" value="4" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_lights">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Ceiling Fans</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_fans">-</button>
+            <input type="number" id="qty_fans" class="counter-input" value="2" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_fans">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Sofa Set</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_sofa">-</button>
+            <input type="number" id="qty_sofa" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_sofa">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Dining Table</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_dining">-</button>
+            <input type="number" id="qty_dining" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_dining">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Chairs</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_chairs">-</button>
+            <input type="number" id="qty_chairs" class="counter-input" value="4" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_chairs">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Bed</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_bed">-</button>
+            <input type="number" id="qty_bed" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_bed">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Wardrobe</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_wardrobe">-</button>
+            <input type="number" id="qty_wardrobe" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_wardrobe">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Curtains (Pairs)</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_curtains">-</button>
+            <input type="number" id="qty_curtains" class="counter-input" value="2" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_curtains">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Rugs / Carpets</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_rugs">-</button>
+            <input type="number" id="qty_rugs" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_rugs">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Wall Art / Frames</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_art">-</button>
+            <input type="number" id="qty_art" class="counter-input" value="2" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_art">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Storage Units</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_storage">-</button>
+            <input type="number" id="qty_storage" class="counter-input" value="1" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_storage">+</button>
+          </div>
+        </div>
+
+        <div class="quantity-item">
+          <label>Decorative Items</label>
+          <div class="counter-controls">
+            <button type="button" class="counter-btn" data-action="minus" data-target="qty_decor">-</button>
+            <input type="number" id="qty_decor" class="counter-input" value="3" min="0">
+            <button type="button" class="counter-btn" data-action="plus" data-target="qty_decor">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Style & Aesthetics -->
+      <h3 style="font-size: 1.25rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        3. Style & Brand Preferences
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="preferred_style">Preferred Style</label>
+          <select id="preferred_style" class="form-control">
+            <option value="Modern" selected>Modern Contemporary</option>
+            <option value="Minimalist">Minimalist</option>
+            <option value="Scandinavian">Scandinavian (Light woods & clean lines)</option>
+            <option value="Traditional Indian">Traditional Indian (Hardwood & Brass)</option>
+            <option value="Industrial">Industrial (Metals & Raw Finishes)</option>
+            <option value="Bohemian">Bohemian (Earthy & Textured)</option>
+            <option value="Luxury">Luxury Glam</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="preferred_colors">Preferred Colors</label>
+          <input type="text" id="preferred_colors" class="form-control" placeholder="e.g. Warm beige, navy blue, emerald green">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="brand_preferences">Brand Preferences</label>
+          <input type="text" id="brand_preferences" class="form-control" placeholder="e.g. IKEA, Urban Ladder, Pepperfry, Amazon">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="additional_requirements">Additional Requirements or Constraints</label>
+        <textarea id="additional_requirements" class="form-control" rows="2" placeholder="e.g. Pet-friendly sofa fabric, space-saving foldable dining table..."></textarea>
+      </div>
+
+      <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
+        <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+          Generate AI Interior Plan &rarr;
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
