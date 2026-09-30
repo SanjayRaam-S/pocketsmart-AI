@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="font-size: 2.25rem; margin-bottom: 0.25rem;">
+        Welcome, <span class="gradient-text">{{ user.full_name }}</span>!
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Here is your AI budget intelligence hub and active planning overview.
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="/history" class="btn btn-secondary">
+        <span>📜</span> View Full History
+      </a>
+      <a href="/home-planner" class="btn btn-primary">
+        <span>+</span> Create New Plan
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Key Metrics Row -->
+<div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 0; margin-bottom: 2.5rem;">
+  <div class="card" style="padding: 1.5rem;">
+    <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Total Plans Created</div>
+    <div style="font-size: 2rem; font-weight: 800; color: var(--primary); margin: 0.35rem 0;">{{ stats.total_plans }}</div>
+    <div style="font-size: 0.85rem; color: var(--text-muted);">
+      {{ stats.home_count }} Home · {{ stats.party_count }} Party · {{ stats.jewelry_count }} Jewelry
+    </div>
+  </div>
+
+  <div class="card" style="padding: 1.5rem;">
+    <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Saved in Collection</div>
+    <div style="font-size: 2rem; font-weight: 800; color: var(--accent); margin: 0.35rem 0;">{{ stats.saved_plans }}</div>
+    <div style="font-size: 0.85rem; color: var(--text-muted);">Bookmarked for execution</div>
+  </div>
+
+  <div class="card" style="padding: 1.5rem;">
+    <div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Cumulative Budget Planned</div>
+    <div style="font-size: 2rem; font-weight: 800; color: #0284c7; margin: 0.35rem 0;">₹{{ "{:,.0f}".format(stats.total_budget) }}</div>
+    <div style="font-size: 0.85rem; color: var(--text-muted);">Allocated without overruns</div>
+  </div>
+</div>
+
+<!-- Quick Action Planner Cards (Section 6) -->
+<div style="margin-bottom: 3rem;">
+  <h2 style="font-size: 1.5rem; margin-bottom: 1.25rem;">Start a New Budget Plan</h2>
+  <div class="cards-grid" style="margin-top: 0;">
+    <!-- Home Interior -->
+    <div class="card feature-card">
+      <div class="card-icon icon-blue">🛋️</div>
+      <h3>Home Interior Planner</h3>
+      <p>Configure room furniture, fans, smart lighting, curtains, and decor within your exact budget ceiling.</p>
+      <a href="/home-planner" class="btn btn-outline" style="width: 100%;">Launch Home Planner &rarr;</a>
+    </div>
+
+    <!-- Party & Events -->
+    <div class="card feature-card">
+      <div class="card-icon icon-purple">🎉</div>
+      <h3>Party & Event Planner</h3>
+      <p>Balance catering, banquets, fairy lights, sound systems, and guest count ratios seamlessly.</p>
+      <a href="/party-planner" class="btn btn-outline" style="width: 100%;">Launch Party Planner &rarr;</a>
+    </div>
+
+    <!-- Jewelry Planner -->
+    <div class="card feature-card">
+      <div class="card-icon icon-amber">💍</div>
+      <h3>Jewelry Styling Planner</h3>
+      <p>Get fine jewelry sets and accent pieces matched to your outfit colors and neckline via Gemini vision.</p>
+      <a href="/jewelry-planner" class="btn btn-outline" style="width: 100%;">Launch Jewelry Planner &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Budget Recommendations -->
+<div class="card" style="padding: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+    <h2 style="font-size: 1.35rem;">Recent Recommendations & Activity</h2>
+    <a href="/history" style="font-size: 0.9rem; font-weight: 600;">View All History &rarr;</a>
+  </div>
+
+  {% if stats.recent_plans and stats.recent_plans|length > 0 %}
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-size: 0.82rem; text-transform: uppercase;">
+            <th style="padding: 0.75rem 0.5rem;">Plan Name</th>
+            <th style="padding: 0.75rem 0.5rem;">Type</th>
+            <th style="padding: 0.75rem 0.5rem;">Budget</th>
+            <th style="padding: 0.75rem 0.5rem;">Est. Spend</th>
+            <th style="padding: 0.75rem 0.5rem;">Saved</th>
+            <th style="padding: 0.75rem 0.5rem; text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in stats.recent_plans %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.85rem 0.5rem; font-weight: 600;">
+                <a href="/{{ p.planner_type }}-planner/results/{{ p.id }}">{{ p.title }}</a>
+              </td>
+              <td style="padding: 0.85rem 0.5rem;">
+                <span class="rec-category">{{ p.planner_type|capitalize }}</span>
+              </td>
+              <td style="padding: 0.85rem 0.5rem;">{{ p.currency }}{{ "{:,.0f}".format(p.budget) }}</td>
+              <td style="padding: 0.85rem 0.5rem; color: #059669; font-weight: 600;">
+                {{ p.currency }}{{ "{:,.0f}".format(p.total_estimated_cost) }}
+              </td>
+              <td style="padding: 0.85rem 0.5rem;">
+                {% if p.is_saved %}
+                  <span style="color: #f59e0b; font-weight: 700;">★ Saved</span>
+                {% else %}
+                  <span style="color: #94a3b8;">—</span>
+                {% endif %}
+              </td>
+              <td style="padding: 0.85rem 0.5rem; text-align: right;">
+                <a href="/{{ p.planner_type }}-planner/results/{{ p.id }}" class="btn btn-outline btn-sm">View Plan</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 3rem 1rem;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</div>
+      <h3 style="font-size: 1.2rem; margin-bottom: 0.35rem;">No Plans Yet</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+        You haven't generated any budget plans yet. Pick a planner above to get started in seconds!
+      </p>
+      <a href="/home-planner" class="btn btn-primary">Start Your First Plan</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
