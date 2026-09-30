@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1050px; margin: 0 auto;">
+  <!-- Header & Actions -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+    <div>
+      <div class="hero-badge">🛋️ Home Interior Plan Generated</div>
+      <h1 style="font-size: 2.2rem; margin-bottom: 0.35rem;">{{ plan.title }}</h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 680px;">
+        {{ plan.summary }}
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <button 
+        onclick="toggleSavePlan({{ plan.id }}, this)" 
+        class="btn {% if plan.is_saved %}btn-primary{% else %}btn-outline{% endif %}">
+        {% if plan.is_saved %}★ Saved in Collection{% else %}☆ Save Recommendation{% endif %}
+      </button>
+      <a href="/home-planner" class="btn btn-secondary">Create Another Plan</a>
+      <a href="/history" class="btn btn-secondary">History</a>
+    </div>
+  </div>
+
+  <!-- Budget Overview Banner (Section 12 & 13) -->
+  <div class="budget-overview-card">
+    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #a5b4fc; font-weight: 700;">
+      Budget & Expenditure Intelligence
+    </div>
+    
+    <div class="budget-stats-grid">
+      <div class="budget-stat">
+        <div class="label">Total Budget Target</div>
+        <div class="value">{{ plan.currency }}{{ "{:,.0f}".format(plan.budget) }}</div>
+      </div>
+      <div class="budget-stat">
+        <div class="label">Total Estimated Spend</div>
+        <div class="value" style="color: #6ee7b7;">{{ plan.currency }}{{ "{:,.0f}".format(plan.total_estimated_cost) }}</div>
+      </div>
+      <div class="budget-stat">
+        <div class="label">Remaining Buffer</div>
+        <div class="value" style="color: {% if plan.remaining_budget < 0 %}#f87171{% else %}#93c5fd{% endif %};">
+          {{ plan.currency }}{{ "{:,.0f}".format(plan.remaining_budget) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilization Progress Bar -->
+    <div class="progress-container">
+      {% set pct = (plan.total_estimated_cost / plan.budget * 100)|round(1) if plan.budget > 0 else 0 %}
+      <div class="progress-header">
+        <span>Budget Utilization: <strong>{{ pct }}%</strong></span>
+        <span>Status: {% if plan.remaining_budget >= 0 %}✓ Within Target{% else %}⚠️ Exceeds Budget{% endif %}</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar-fill" style="width: {{ [pct, 100]|min }}%; {% if plan.remaining_budget < 0 %}background: #ef4444;{% endif %}"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Budget Allocation Breakdown -->
+  <div class="card" style="margin-bottom: 2.5rem; padding: 1.75rem;">
+    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Smart Category Allocation Breakdown</h3>
+    <div style="display: flex; flex-direction: column;">
+      {% for cat in plan.budget_allocation %}
+        <div class="allocation-item">
+          <div style="font-weight: 600; width: 35%;">{{ cat.category }}</div>
+          <div style="display: flex; align-items: center; width: 40%;">
+            <div class="allocation-bar-bg">
+              <div class="allocation-bar-fg" style="width: {{ cat.percentage }}%;"></div>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">{{ cat.percentage }}%</span>
+          </div>
+          <div style="font-weight: 700; width: 25%; text-align: right;">
+            {{ plan.currency }}{{ "{:,.0f}".format(cat.allocated) }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Curated Product Recommendations (Section 13) -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+      <h2 style="font-size: 1.6rem;">Curated Product Recommendations</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">
+        {{ plan.recommendations|length }} items matched
+      </span>
+    </div>
+
+    <div class="rec-grid">
+      {% for item in plan.recommendations %}
+        <div class="rec-card">
+          <div>
+            <div class="rec-header">
+              <span class="rec-category">{{ item.category }}</span>
+              <span class="platform-badge platform-{{ item.platform|lower }}">{{ item.platform }}</span>
+            </div>
+            <h4 class="rec-title">{{ item.name }}</h4>
+            <p class="rec-desc">{{ item.description }}</p>
+            <div class="rec-reason">
+              <strong>Why Recommended:</strong> {{ item.reason }}
+            </div>
+          </div>
+
+          <div class="rec-footer">
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Estimated Price</div>
+              <div class="rec-price">{{ plan.currency }}{{ "{:,.0f}".format(item.estimated_price) }}</div>
+            </div>
+            <a href="{{ item.url }}" target="_blank" class="btn btn-secondary btn-sm" title="View product link">
+              View on {{ item.platform }} ↗
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Safety / Simulation Notice (Section 11) -->
+  <div class="alert alert-info" style="font-size: 0.85rem; margin-top: 2rem;">
+    ℹ️ <strong>Marketplace Notice:</strong> Recommendations and pricing are simulated estimates optimized for budget planning. Always verify live stock, specifications, and taxes directly with merchants.
+  </div>
+</div>
+{% endblock %}
