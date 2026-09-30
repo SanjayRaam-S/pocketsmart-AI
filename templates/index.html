@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-badge">
+    <span>✨ Powered by Google Gemini AI</span>
+  </div>
+  <h1>
+    Plan smarter. <span class="gradient-text">Spend better.</span> Live better.
+  </h1>
+  <p class="subtitle">
+    Your AI-powered budget assistant for shopping, home interiors, events, and personal style. Allocate funds intelligently and discover best-value products without exceeding your limits.
+  </p>
+  <div class="hero-buttons">
+    {% if user %}
+      <a href="/dashboard" class="btn btn-primary btn-lg">Go to Dashboard &rarr;</a>
+    {% else %}
+      <a href="/register" class="btn btn-primary btn-lg">Start Planning &rarr;</a>
+    {% endif %}
+    <a href="#features" class="btn btn-secondary btn-lg">Explore Features</a>
+  </div>
+</section>
+
+<!-- Feature Planners Grid -->
+<section id="features" style="padding: 2.5rem 0;">
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Three Intelligent Planners in One</h2>
+    <p style="color: var(--text-muted);">Select a planner below to begin tailored budgeting and recommendations.</p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Home Interior Card -->
+    <div class="card feature-card">
+      <div class="card-icon icon-blue">🛋️</div>
+      <h3>Home Interior Planner</h3>
+      <p>
+        Plan your living spaces, bedrooms, and dining areas. Specify item quantities for sofas, beds, ceiling fans, and lighting, and let Gemini allocate category budgets with realistic product options.
+      </p>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+        <span class="platform-badge platform-ikea">IKEA</span>
+        <span class="platform-badge platform-amazon">Amazon</span>
+        <span class="platform-badge">Pepperfry</span>
+      </div>
+      <a href="/home-planner" class="btn btn-outline" style="width: 100%;">Plan Home Interior &rarr;</a>
+    </div>
+
+    <!-- Party & Events Card -->
+    <div class="card feature-card">
+      <div class="card-icon icon-purple">🎉</div>
+      <h3>Party & Event Planner</h3>
+      <p>
+        Plan venue, food, decoration, entertainment, and accommodation without exceeding your budget. Calculate realistic cost-per-guest metrics for birthdays, weddings, or corporate events.
+      </p>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+        <span class="platform-badge platform-swiggy">Swiggy Gourmet</span>
+        <span class="platform-badge platform-zomato">Zomato</span>
+        <span class="platform-badge">OYO Banquets</span>
+      </div>
+      <a href="/party-planner" class="btn btn-outline" style="width: 100%;">Plan Celebration &rarr;</a>
+    </div>
+
+    <!-- Jewelry Planner Card -->
+    <div class="card feature-card">
+      <div class="card-icon icon-amber">💍</div>
+      <h3>Jewelry Styling Planner</h3>
+      <p>
+        Get personalized jewelry recommendations based on your occasion, style, metal preference, and budget. Upload an outfit photo for AI-driven aesthetic and neckline matching.
+      </p>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+        <span class="platform-badge platform-caratlane">CaratLane</span>
+        <span class="platform-badge">Tanishq</span>
+        <span class="platform-badge">Kalyan</span>
+      </div>
+      <a href="/jewelry-planner" class="btn btn-outline" style="width: 100%;">Style My Jewelry &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section style="padding: 4rem 1rem; background: white; border-radius: var(--radius-lg); margin: 3rem 0; border: 1px solid var(--border-color);">
+  <div style="text-align: center; max-width: 650px; margin: 0 auto 3rem;">
+    <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">How PocketSmart AI Works</h2>
+    <p style="color: var(--text-muted);">From raw budget numbers to structured actionable shopping lists in seconds.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; padding: 0 1rem;">
+    <div style="text-align: center;">
+      <div style="width: 50px; height: 50px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; margin: 0 auto 1rem;">1</div>
+      <h4 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Enter Budget & Preferences</h4>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">Input your total funds, target rooms or guest counts, aesthetic preferences, or upload your outfit.</p>
+    </div>
+
+    <div style="text-align: center;">
+      <div style="width: 50px; height: 50px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; margin: 0 auto 1rem;">2</div>
+      <h4 style="font-size: 1.15rem; margin-bottom: 0.5rem;">AI Allocation Engine</h4>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">Gemini AI and our mathematical budget service allocate exact percentage caps to prevent overspending.</p>
+    </div>
+
+    <div style="text-align: center;">
+      <div style="width: 50px; height: 50px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; margin: 0 auto 1rem;">3</div>
+      <h4 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Curated Recommendations</h4>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">Review beautifully rendered cards with platform links, rationale, and instant bookmarking to history.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section style="padding: 2.5rem 0;">
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Loved by Planners & Shoppers</h2>
+    <p style="color: var(--text-muted);">See how PocketSmart AI is taking the stress out of budgeting.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div style="color: #f59e0b; font-size: 1.1rem; margin-bottom: 0.5rem;">★★★★★</div>
+      <p style="font-style: italic; color: #334155;">
+        "I furnished my entire 2BHK flat under ₹2,00,000 without going over budget. The breakdown between lighting, furniture, and curtains was spot on!"
+      </p>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700;">RS</div>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9rem;">Rohan Sharma</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Homeowner, Bengaluru</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color: #f59e0b; font-size: 1.1rem; margin-bottom: 0.5rem;">★★★★★</div>
+      <p style="font-style: italic; color: #334155;">
+        "Planned my daughter's 1st birthday party for 40 guests in minutes. The per-guest cost estimation made choosing the buffet menu effortless."
+      </p>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700;">PM</div>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9rem;">Pooja Mehta</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Event Host, Mumbai</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="color: #f59e0b; font-size: 1.1rem; margin-bottom: 0.5rem;">★★★★★</div>
+      <p style="font-style: italic; color: #334155;">
+        "I uploaded a picture of my reception lehenga and the jewelry planner matched Polki Kundan chokers that matched the neckline perfectly!"
+      </p>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700;">AK</div>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9rem;">Ananya Kapoor</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Bride, New Delhi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section style="background: linear-gradient(135deg, var(--primary) 0%, #312e81 100%); color: white; border-radius: var(--radius-lg); padding: 3rem 2rem; text-align: center; margin: 3rem 0;">
+  <h2 style="color: white; font-size: 2.2rem; margin-bottom: 0.75rem;">Ready to Plan Your Next Budget?</h2>
+  <p style="color: #c7d2fe; max-width: 600px; margin: 0 auto 1.75rem; font-size: 1.05rem;">
+    Join thousands making smarter spending decisions with AI-guided budget safety and vendor recommendations.
+  </p>
+  {% if user %}
+    <a href="/dashboard" class="btn btn-secondary btn-lg">Open Your Dashboard</a>
+  {% else %}
+    <a href="/register" class="btn btn-secondary btn-lg">Create Free Account</a>
+  {% endif %}
+</section>
+{% endblock %}
