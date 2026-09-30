@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 0 auto;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem; text-align: center;">
+    <div class="hero-badge">🎉 Party & Event Budget Planner</div>
+    <h1 style="font-size: 2.35rem; margin-bottom: 0.5rem;">Host an Unforgettable Event Within Budget</h1>
+    <p style="color: var(--text-muted); font-size: 1rem; max-width: 650px; margin: 0 auto;">
+      Divide your event funds intelligently across catering, banquets, decor, sound, and accommodation with per-guest cost optimization.
+    </p>
+  </div>
+
+  <div class="form-card">
+    <form id="partyPlannerForm">
+      <!-- Section 1: Event Fundamentals -->
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        1. Event Essentials & Guest Scale
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="party_budget">Total Budget <span class="required">*</span></label>
+          <div style="display: flex; gap: 0.5rem;">
+            <select id="party_currency" class="form-control" style="max-width: 80px;">
+              <option value="₹">₹</option>
+              <option value="$">$</option>
+              <option value="€">€</option>
+              <option value="£">£</option>
+            </select>
+            <input type="number" id="party_budget" class="form-control" placeholder="e.g. 50000" min="2000" step="500" value="50000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="event_type">Event Type <span class="required">*</span></label>
+          <select id="event_type" class="form-control">
+            <option value="Birthday" selected>Birthday Celebration</option>
+            <option value="Wedding">Wedding / Sangeet</option>
+            <option value="Anniversary">Anniversary Party</option>
+            <option value="Corporate">Corporate Gathering</option>
+            <option value="Engagement">Engagement Party</option>
+            <option value="Baby Shower">Baby Shower</option>
+            <option value="House Party">House Party / Get-together</option>
+            <option value="Other">Other Celebration</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="party_guests">Number of Guests <span class="required">*</span></label>
+          <input type="number" id="party_guests" class="form-control" value="35" min="2" max="2000" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="party_location">City / Venue Area</label>
+          <input type="text" id="party_location" class="form-control" value="Central City" placeholder="e.g. South Delhi, Indiranagar Bangalore">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="event_date">Planned Date</label>
+          <input type="date" id="event_date" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="indoor_outdoor">Environment</label>
+          <select id="indoor_outdoor" class="form-control">
+            <option value="Indoor" selected>Indoor Banquet / Hall</option>
+            <option value="Outdoor">Outdoor Lawn / Garden</option>
+            <option value="Hybrid">Hybrid Indoor + Lawn</option>
+            <option value="Home">Home / Terrace</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Section 2: Catering & Hospitality -->
+      <h3 style="font-size: 1.25rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        2. Food, Decor & Entertainment
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="food_preference">Food & Beverage Style</label>
+          <select id="food_preference" class="form-control">
+            <option value="Both" selected>Multi-Cuisine Buffet (Veg + Non-Veg)</option>
+            <option value="Vegetarian">Pure Vegetarian Deluxe Buffet</option>
+            <option value="Non-Vegetarian">Non-Vegetarian Focused</option>
+            <option value="Finger Foods">Appetizers & Mocktails Only</option>
+            <option value="High-Tea">High-Tea & Snacks</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="decoration_style">Decoration Theme</label>
+          <select id="decoration_style" class="form-control">
+            <option value="Elegant Modern" selected>Elegant Modern & LED Par Cans</option>
+            <option value="Fairy Lights">Fairy Light Canopy & Neon Sign</option>
+            <option value="Floral Grand">Floral Arch & Stage Setup</option>
+            <option value="Minimalist">Minimalist Balloon & Pastel Garland</option>
+            <option value="Traditional">Traditional Marigold & Brass Urli</option>
+            <option value="Retro/Themed">Themed / Retro 90s</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="entertainment_preference">Entertainment</label>
+          <select id="entertainment_preference" class="form-control">
+            <option value="DJ & Sound System" selected>Professional DJ & Sound Setup</option>
+            <option value="Emcee & Party Games">Emcee + Interactive Games</option>
+            <option value="Live Acoustic Band">Live Acoustic Duo / Band</option>
+            <option value="Ambient Background Music">Ambient Background Music</option>
+            <option value="None">None (Host Managed)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row" style="align-items: center; margin-top: 0.5rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="event_duration">Event Duration</label>
+          <select id="event_duration" class="form-control">
+            <option value="3 hours">3 hours</option>
+            <option value="4 hours" selected>4 hours (Standard)</option>
+            <option value="6 hours">6 hours (Extended Evening)</option>
+            <option value="Full Day">Full Day / Overnight</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0; padding-top: 1.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-weight: 600;">
+            <input type="checkbox" id="accommodation_required" style="width: 18px; height: 18px; accent-color: var(--primary);">
+            <span>Guest Accommodation Required</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 1.25rem;">
+        <label class="form-label" for="party_notes">Additional Special Requests or Dietary Constraints</label>
+        <textarea id="party_notes" class="form-control" rows="2" placeholder="e.g. Jain food options, cake cutting area, kids play section..."></textarea>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          Generate AI Party Budget Plan &rarr;
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
